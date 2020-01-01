@@ -16,12 +16,13 @@ Supported OS: Windows (7 or higher), Linux (Debian, Ubuntu)<br>
 *The list of the supported Operating Systems is made based on tests only.
 
 # Installing
-
 1. Download content from the git repository ( use either Zip-download option or clone it via   `git clone https://github.com/leo-mail/LWS.git` )
 2. Launch Start.sh if you're running under Linux-like system, if not - Start.bat for MS Windows<br>
 Then it will automatically identify php packages if it's already installed, if not - script will install it for you
 
 Notice: Superuser privelegies required when using Linux (sudo)
+
+Notice-2: under Windows it is possible to put php binaries in /php or /bin sub-folders
 
 # Troubleshooting
 1. The port is already taken - check for other servers running on current machine, for example port 80 is default blocked by Apache on Debian

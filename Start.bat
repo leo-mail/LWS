@@ -1,15 +1,37 @@
 @if (@a==@b) @end /*
-
 @echo off
-@chcp 65001>NUL
 title Lion Web Server
-where php-cgi.exe >nul 2>&1 && php.exe "Server/Start.php" || goto :inst
-pause
-goto :EOF
-:inst
-title Lion Web Server --Installation[0%]
 setlocal
 set binary_dir=%windir:~0,3%php\bin
+where php-cgi.exe >nul 2>&1 || goto :check-old
+@chcp 65001>NUL
+if %~1==php if %~2==upd goto :update
+php.exe "Server/Start.php"
+pause
+goto :EOF
+:check-old
+if not EXIST "%binary_dir%\php-cgi.exe" goto :next-c-1
+	set ppp="%PATH%;%binary_dir%"
+	path %ppp%
+	echo PHP binaries found in %binary_dir%! 'Path' variable has been updated
+	echo Please, restart your system to use it now.
+goto :EOF
+:next-c-1
+if not EXIST "%CD%\php\php-cgi.exe" goto :next-c-2
+	set ppp="%PATH%;%CD%\php"
+	path %ppp%
+	echo PHP binaries found in %CD%\php! 'Path' variable has been updated
+	echo Please, restart your system to use it now.
+goto :EOF
+:next-c-2
+if not EXIST "%CD%\bin\php-cgi.exe" goto :not-found
+	set ppp="%PATH%;%CD%\bin"
+	path %ppp%
+	echo PHP binaries found in %CD%\bin! 'Path' variable has been updated
+	echo Please, restart your system to use it now.
+goto :EOF
+:not-found
+title Lion Web Server --Installation[0%]
 if  EXIST "%CD%/php.zip" goto :install
 echo Checking internet connection...
 ping windows.php.net >NUL
@@ -18,6 +40,8 @@ echo DONE!
 echo Gathering latest PHP binaries download link...
 title Lion Web Server --Installation[3%]
 set res=""
+set /a pass=1
+:check-new
 set pcx="64"
 echo "%PROCESSOR_ARCHITECTURE%" | findstr /i "64" >NUL || set pcx="86"
 ::compares cpu arch (is it x32)
@@ -25,7 +49,9 @@ echo "%PROCESSOR_ARCHITECTURE%" | findstr /i "64" >NUL || set pcx="86"
 for /f "delims=>" %%I in ('cscript /nologo /e:jscript "%~f0" "https://windows.php.net/downloads/releases/latest"') do call :loopchecker "%%I", res
 	title Lion Web Server --Installation[5%]
 	echo DONE!
+	if %pass%==0 goto :launch-check
 	cscript /nologo /e:jscript "%~f0" "%res%" "%CD%\php.zip"
+	:inst-downloaded
 	if not EXIST "%CD%/php.zip" call :Err "Try downloading php binaries from https://windows.php.net/downloads/releases/latest/"
 	title Lion Web Server --Installation[50%]
 	:install
@@ -37,12 +63,16 @@ for /f "delims=>" %%I in ('cscript /nologo /e:jscript "%~f0" "https://windows.ph
 path %PATH%;%binary_dir%
 	echo DONE!
 	echo Copying configuration...
-	@COPY "%CD%\Server\php.ini" "%binary_dir%\php.ini">NUL
+	call :ini-update "%binary_dir%\php.ini" "%binary_dir%\php.ini-development"
 	if not EXIST "%binary_dir%\php.ini" call :Err "Error: Cannot copy PHP.ini"
 	title Lion Web Server --Installation[100%]
 	echo DONE!
+	if %pass%==0 (
+			echo PHP HAS BEEN SUCCESSFULLY UPDATED!
+			goto :EOF
+		)
 	echo PHP HAS BEEN SUCCESSFULLY INSTALLED!
-	echo Please, re-log into system to start-up server
+	echo Please, relog into your system to start-up server
 	pause
 	goto :EOF
 endlocal
@@ -76,25 +106,63 @@ endlocal
 		echo %~1
 		pause
 		goto :EOF
+	EXIT /B 1
+	:check-num-set
+	setlocal
+		set /A i=0
+		set inp=%~2
+		:check-num-set-loop
+			set /a ii=%i% + 1
+			goto :EOF
+			if !%inp:~%i%,%ii%%! == "" goto :check-num-return
+			set /a anum=0
+			if !%inp:~%i%,%ii%%! == "." set /a anum=1
+			if !%inp:~%i%,%ii%%! == "," set /a anum=1
+			if !%inp:~%i%,%ii%%! == 9 set /a anum=1
+			::if !%inp:~%i%,%ii%! == 0 set /a anum=1
+			if !%inp:~%i%,%ii%%! == 1 set /a anum=1
+			if !%inp:~%i%,%ii%%! == 2 set /a anum=1
+			if !%inp:~%i%,%ii%%! == 3 set /a anum=1
+			if !%inp:~%i%,%ii%%! == 4 set /a anum=1
+			if !%inp:~%i%,%ii%%! == 5 set /a anum=1
+			if !%inp:~%i%,%ii%%! == 6 set /a anum=1
+			if !%inp:~%i%,%ii%%! == 7 set /a anum=1 
+			if !%inp:~%i%,%ii%%! == 8 set /a anum=1
+			if anum==0 EXIT /B 0
+			set /A i += 1
+			goto :check-num-set-loop
+		:check-num-return
+		(endlocal & set "%~1=%~2")
 	EXIT /B 0
+	:ini-update
+	setlocal disableDelayedExpansion
+	set rep2=short_open_tag = Off
+	set rep3=memory_limit = 128M
+	>"%~1" (
+	  for /f "usebackq delims=" %%A in ("%~2") do (
+		if "%%A" == "%rep2%" ( echo short_open_tag = On ) else ( if "%%A" == "%rep3%" ( 
+			echo memory_limit = 1028M
+			echo extension_dir = "ext"
+			) else ( echo %%A ) )
+		)
+	)
+	endlocal
+	EXIT /B 0
+	:update
+		set /A pass=0
+		goto :check-new
+	:launch-check
+		for /f "tokens=1,2 delims= " %%a in (php.exe "-v") do call :check-num-set cur, %%b
+		for /f "tokens=1,2 delims=-" %%a in ("%res%") do set new=%%b
+	if "%new%" == "%cur%" goto :no-new
+		echo NEW PHP VERSION IS AVAILABLE (%new%)
+	 cscript /nologo /e:jscript "%~f0" "%res%" "%CD%\php.zip" 
+	goto :inst-downloaded
+	:no-new
+		echo Current PHP version is the latest version
 goto :EOF
 
 JScript */
-function progress(position, max){
-	var cr = "";
-	var pos	= (position/(max/100));
-	
-	var msdospos = Math.round((pos/100)*40);
-	var pos = Math.round(pos);
-	
-	for(i = 0; i < msdospos; i++)
-			cr = cr + "#";
-	for(i = 0; i < 40-msdospos; i++)
-			cr = cr + "_"
-	//WSH.Execute('title "Lion Web Server --Installation[' + pos/3.5 + ']"'); sry doesn't working
-	WSH.Echo( "Downloading PHP binaries [" + liver + "]...\n" + "[" + cr + "] - " + pos + "%" + " (" + position + "Kb of " + max + "Kb)" );
-};
-
 	if(WSH.Arguments.Count() == 0) halt();
 	if(WSH.Arguments.Count() < 3){
 	var x = new ActiveXObject("MSXML2.XMLHTTP");
