@@ -1,6 +1,12 @@
 # LWS
 Lion Web Server
+Version 1.0
 
+# Requirements
+1. PHP and PHP-CGI
+2. PHP Json Extension
+3. PHP PCRE Extension (Perl-Compatible Regex)
+ 
 # Version Info
 Version 1.0
 
@@ -23,3 +29,5 @@ Notice: Superuser privelegies required when using Linux (sudo)
 
 # Configuring
 Open config.xml and edit values on your own (Further instruction will be published after upgrading to version 1.1)
+# About
+Simple HTTP server, written using system functions (console scripts) and pure php code
