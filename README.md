@@ -5,8 +5,9 @@ Version 1.0
 # Requirements
 1. PHP and PHP-CGI
 2. PHP Json Extension
-3. PHP PCRE Extension (Perl-Compatible Regex)
- 
+3. PHP PCRE Extension (Perl-Compatible Regex)<br>
+<b>Minimum PHP binaries version: 5.6 (with 5.4 haven't tested yet, may also work)</b>
+
 # Version Info
 Version 1.0
 
