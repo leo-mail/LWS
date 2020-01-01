@@ -31,5 +31,5 @@ Notice: Superuser privelegies required when using Linux (sudo)
 Open config.xml and edit values on your own (Further instruction will be published after upgrading to version 1.1)
 
 # About
-Simple HTTP server, written using system functions (console scripts) and pure php code
+Simple HTTP server, written using system functions (console scripts) and pure php code<br>
 Uses CGI and PHP Streams to provide responses to the requests.
