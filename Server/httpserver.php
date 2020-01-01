@@ -51,6 +51,7 @@ class HTTP
 		if(!is_dir($www) or !is_readable($www)){
 			die("HTTP error: site location[homepath] is unaccessable! Aborting...\n");
 		}
+		if( !is_dir("logs") ) mkdir("logs");
 		foreach($cfg as $a=>$value)
 		{
 			$this->$a = is_array($value)?$value:trim($value);
