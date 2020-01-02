@@ -35,4 +35,4 @@ Open config.xml and edit values on your own (Further instruction will be publish
 # About
 Simple HTTP server, written using system functions (console scripts) and pure php code<br>
 Uses CGI and PHP Streams to provide responses to the requests.
-<br>Features is listed in <a href="/Features.md">Features.md<a>
+<br>Features is listed in <a href="/Features.md">Features.md<a> every Release version
