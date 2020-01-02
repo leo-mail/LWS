@@ -1,4 +1,8 @@
-@if (@a==@b) @end /*
+// >/dev/null 2>&1 || # >/dev/null 2>&1 || goto :st
+// >/dev/null 2>&1 || :<<"::BATCH"
+/*
+:st
+cls
 @echo off
 title Lion Web Server
 setlocal
@@ -7,29 +11,28 @@ where php-cgi.exe >nul 2>&1 || goto :check-old
 @chcp 65001>NUL
 if %~1==php if %~2==upd goto :update
 php.exe "Server/Start.php"
-pause
-goto :EOF
+goto :P
 :check-old
 if not EXIST "%binary_dir%\php-cgi.exe" goto :next-c-1
 	set ppp="%PATH%;%binary_dir%"
 	path %ppp%
 	echo PHP binaries found in %binary_dir%! 'Path' variable has been updated
 	echo Please, restart your system to use it now.
-goto :EOF
+goto :P
 :next-c-1
 if not EXIST "%CD%\php\php-cgi.exe" goto :next-c-2
 	set ppp="%PATH%;%CD%\php"
 	path %ppp%
 	echo PHP binaries found in %CD%\php! 'Path' variable has been updated
 	echo Please, restart your system to use it now.
-goto :EOF
+goto :P
 :next-c-2
 if not EXIST "%CD%\bin\php-cgi.exe" goto :not-found
 	set ppp="%PATH%;%CD%\bin"
 	path %ppp%
 	echo PHP binaries found in %CD%\bin! 'Path' variable has been updated
 	echo Please, restart your system to use it now.
-goto :EOF
+goto :P
 :not-found
 title Lion Web Server --Installation[0%]
 if  EXIST "%CD%/php.zip" goto :install
@@ -69,12 +72,12 @@ path %PATH%;%binary_dir%
 	echo DONE!
 	if %pass%==0 (
 			echo PHP HAS BEEN SUCCESSFULLY UPDATED!
-			goto :EOF
+			goto :P
 		)
 	echo PHP HAS BEEN SUCCESSFULLY INSTALLED!
 	echo Please, relog into your system to start-up server
 	pause
-	goto :EOF
+	goto :P
 endlocal
 	:loopchecker
 	
@@ -160,11 +163,26 @@ endlocal
 	goto :inst-downloaded
 	:no-new
 		echo Current PHP version is the latest version
+:P
+pause
 goto :EOF
-
-JScript */
-	if(WSH.Arguments.Count() == 0) halt();
-	if(WSH.Arguments.Count() < 3){
+::BATCH
+sudo
+if [ "" == $(dpkg-query -W --showformat='${Status}\n' php|grep "i") ]; then
+  apt-get --yes install php
+fi  
+if [ "" == $(dpkg-query -W --showformat='${Status}\n' php-cgi|grep "i") ]; then
+  apt-get --yes install php-cgi
+fi
+if [ "" == $(dpkg-query -W --showformat='${Status}\n' wmctrl|grep "i") ]; then
+  apt-get --yes install wmctrl
+fi
+wmctrl -r :ACTIVE: -N "Lion Web Server"
+php 'Server/Start.php'
+exit $?
+:<<"//JScript"
+*/
+	if(WSH.Arguments.Count() < 3 && WSH.Arguments.Count() > 0){
 	var x = new ActiveXObject("MSXML2.XMLHTTP");
 	x.open("GET",WSH.Arguments(0),true);
 	x.Send(); };
@@ -179,7 +197,7 @@ if( WSH.Arguments.Count() == 1)
 	WSH.Echo( "Downloading PHP binaries " + liver + "..." );
 	
 	while( x.readyState!=4 ){ WSH.Sleep(50); };
-	
+	//Status between 200 and 399
 	if( x.Status > 199 && x.Status < 400 ){
 	var echou = "~";
 	var len="Downloading PHP binaries " + liver + "...";
@@ -187,7 +205,6 @@ if( WSH.Arguments.Count() == 1)
 	for(i = 0; i<len.length; i++ )
 		echou = echou + "~";
 	WSH.Echo(echou);
-	//Status between 200 and 399
 	var objADOStream = new ActiveXObject("ADODB.Stream")
 	objADOStream.Open();
 	objADOStream.Type = 1; //adTypeBinary
@@ -255,3 +272,4 @@ if( WSH.Arguments.Count() == 1)
 	objFSO = null
 };
 x = null;
+//JScript
