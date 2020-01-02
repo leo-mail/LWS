@@ -1,74 +1,71 @@
-// >/dev/null 2>&1 || # >/dev/null 2>&1 || goto :st
+// >/dev/null 2>&1 || # >/dev/null 2>&1 || goto :s
 // >/dev/null 2>&1 || :<<"::BATCH"
 /*
-:st
+:s
 cls
 @echo off
-title Lion Web Server
+set lws=Lion Web Server
+title %lws%
 setlocal
 set binary_dir=%windir:~0,3%php\bin
-where php-cgi.exe >nul 2>&1 || goto :check-old
+where php-cgi.exe >nul 2>&1 || goto :check
 @chcp 65001>NUL
 if %~1==php if %~2==upd goto :update
 php.exe "Server/Start.php"
 goto :P
-:check-old
-if not EXIST "%binary_dir%\php-cgi.exe" goto :next-c-1
-	set ppp="%PATH%;%binary_dir%"
-	path %ppp%
+:check
+if not EXIST "%binary_dir%\php-cgi.exe" goto :check2
+	call :pup "%PATH%;%binary_dir%"
 	echo PHP binaries found in %binary_dir%! 'Path' variable has been updated
 	echo Please, restart your system to use it now.
 goto :P
-:next-c-1
-if not EXIST "%CD%\php\php-cgi.exe" goto :next-c-2
-	set ppp="%PATH%;%CD%\php"
-	path %ppp%
+:check2
+if not EXIST "%CD%\php\php-cgi.exe" goto :check3
+	call :pup "%PATH%;%CD%\php"
 	echo PHP binaries found in %CD%\php! 'Path' variable has been updated
 	echo Please, restart your system to use it now.
 goto :P
-:next-c-2
+:check3
 if not EXIST "%CD%\bin\php-cgi.exe" goto :not-found
-	set ppp="%PATH%;%CD%\bin"
-	path %ppp%
+	call :pup "%PATH%;%CD%\bin"
 	echo PHP binaries found in %CD%\bin! 'Path' variable has been updated
 	echo Please, restart your system to use it now.
 goto :P
 :not-found
-title Lion Web Server --Installation[0%]
+title %lws% --Installation[0%]
 if  EXIST "%CD%/php.zip" goto :install
 echo Checking internet connection...
 ping windows.php.net >NUL
 if %ErrorLevel% GTR 0 call :Err "Error: Cannot connect to the PHP official site"
 echo DONE!
 echo Gathering latest PHP binaries download link...
-title Lion Web Server --Installation[3%]
+title %lws% --Installation[3%]
 set res=""
 set /a pass=1
 :check-new
 set pcx="64"
 echo "%PROCESSOR_ARCHITECTURE%" | findstr /i "64" >NUL || set pcx="86"
-::compares cpu arch (is it x32)
-
 for /f "delims=>" %%I in ('cscript /nologo /e:jscript "%~f0" "https://windows.php.net/downloads/releases/latest"') do call :loopchecker "%%I", res
-	title Lion Web Server --Installation[5%]
+	title %lws% --Installation[5%]
 	echo DONE!
 	if %pass%==0 goto :launch-check
 	cscript /nologo /e:jscript "%~f0" "%res%" "%CD%\php.zip"
 	:inst-downloaded
-	if not EXIST "%CD%/php.zip" call :Err "Try downloading php binaries from https://windows.php.net/downloads/releases/latest/"
-	title Lion Web Server --Installation[50%]
+	if not EXIST "%CD%/php.zip" call :Err "Error extracting php.zip\r\nTry downloading php binaries from https://windows.php.net/downloads/releases/latest/"
+	echo PHP extracted to %binary_dir%
+	title %lws% --Installation[50%]
 	:install
-	title Lion Web Server --Installation[55%]
+	title %lws% --Installation[55%]
 	if not EXIST "%binary_dir%" mkdir %binary_dir%
 	cscript /nologo /e:jscript "%~f0" "%CD%\php.zip" "%binary_dir%" "1"
-	title Lion Web Server --Installation[98%]
+	title %lws% --Installation[98%]
 	echo Writing to the 'path' variable...
-path %PATH%;%binary_dir%
+call :pup "%PATH%;%binary_dir%"
 	echo DONE!
 	echo Copying configuration...
 	call :ini-update "%binary_dir%\php.ini" "%binary_dir%\php.ini-development"
 	if not EXIST "%binary_dir%\php.ini" call :Err "Error: Cannot copy PHP.ini"
-	title Lion Web Server --Installation[100%]
+	title %lws% --Installation[100%]
 	echo DONE!
 	if %pass%==0 (
 			echo PHP HAS BEEN SUCCESSFULLY UPDATED!
@@ -107,15 +104,18 @@ endlocal
 
 	:Err
 		echo %~1
-		pause
-		goto :EOF
+		goto :P
 	EXIT /B 1
+	:pup
+		cscript /nologo /e:jscript "%~f0" "0" %~1
+	EXIT /B 0
 	:check-num-set
 	setlocal
 		set /A i=0
 		set inp=%~2
 		:check-num-set-loop
 			set /a ii=%i% + 1
+			::loop-lace trick *batch bugs are annoying
 			goto :EOF
 			if !%inp:~%i%,%ii%%! == "" goto :check-num-return
 			set /a anum=0
@@ -182,15 +182,23 @@ php 'Server/Start.php'
 exit $?
 :<<"//JScript"
 */
-	if(WSH.Arguments.Count() < 3 && WSH.Arguments.Count() > 0){
-	var x = new ActiveXObject("MSXML2.XMLHTTP");
-	x.open("GET",WSH.Arguments(0),true);
-	x.Send(); };
+if( WSH.Arguments.Count() > 0){
+if(WSH.Arguments.Count() < 3){
+	if( WSH.Arguments(0) == "0" && WSH.Arguments.Count() == 2 )
+	{
+		var x = new ActiveXObject( "WScript.Shell" ).Environment("SYSTEM");
+		x("PATH") = WSH.Arguments(1);
+	} else {
+		var x = new ActiveXObject("MSXML2.XMLHTTP");
+		x.open("GET",WSH.Arguments(0),true);
+		x.Send();
+	};
+};
 if( WSH.Arguments.Count() == 1)
 {
 	while( x.readyState!=4 ){ WSH.Sleep(50); };
 	WSH.Echo(x.responseText);
-} else if( WSH.Arguments.Count() == 2) {
+} else if( WSH.Arguments.Count() == 2 && WSH.Arguments(0) != "0" ) {
 	var liver = WSH.Arguments(0);
 	liver = (liver.split("/")[6]).split("-");
 	liver = "ver " + liver[1] + '[' + liver[4] + ']';
@@ -205,25 +213,25 @@ if( WSH.Arguments.Count() == 1)
 	for(i = 0; i<len.length; i++ )
 		echou = echou + "~";
 	WSH.Echo(echou);
-	var objADOStream = new ActiveXObject("ADODB.Stream")
-	objADOStream.Open();
-	objADOStream.Type = 1; //adTypeBinary
+	var oStream = new ActiveXObject("ADODB.Stream")
+	oStream.Open();
+	oStream.Type = 1; //adTypeBinary
 	
-	objADOStream.Write( x.ResponseBody );
-	objADOStream.Position = 0;
+	oStream.Write( x.ResponseBody );
+	oStream.Position = 0;
 	
-		var objFSO  = new ActiveXObject("Scripting.FileSystemObject");
-		if( objFSO.FileExists( WSH.Arguments(1) ) ){
-			objFSO.DeleteFile( WSH.Arguments(1) );
+		var fso  = new ActiveXObject("Scripting.FileSystemObject");
+		if( fso.FileExists( WSH.Arguments(1) ) ){
+			fso.DeleteFile( WSH.Arguments(1) );
 		}
-		if( objFSO.FileExists( WSH.Arguments(1) ) )
+		if( fso.FileExists( WSH.Arguments(1) ) )
 		{
 			WSH.Echo("Error: file php.zip is unaccessable!");
 		} else {
-			objFSO = null;
-			objADOStream.SaveToFile( WSH.Arguments(1) );
-			objADOStream.Close();
-			objADOStream = null;
+			fso = null;
+			oStream.SaveToFile( WSH.Arguments(1) );
+			oStream.Close();
+			oStream = null;
 			var dwlMb = x.GetResponseHeader("Content-Length")/1048576 + "";
 			dwlMb = dwlMb.split(".");
 			WSH.Echo("Downloaded: " + dwlMb[0] + "." + dwlMb[1].split("")[0] + "Mb =~> PHP.zip");
@@ -233,43 +241,33 @@ if( WSH.Arguments.Count() == 1)
 		WSH.Echo("Error: cannot download latest php tarball\nAborting...");
 	};
 } else {
-	var MyZipFile = WSH.Arguments(0);
-	var MyTargetDir = WSH.Arguments(1);
-	WSH.Echo("Extracting php.zip, ...");
+	var Zip = WSH.Arguments(0);
+	var ExtractionDir = WSH.Arguments(1);
+	WSH.Echo("Extracting php.zip,,,");
 	if( WSH.Arguments.Count() > 3 ){
 		var PrompTo = WSH.Arguments(3);
 	} else {
 		var PrompTo = false;
 	};
     
-    var objShell = new ActiveXObject( "Shell.Application" );
-    var x = objShell.NameSpace(MyZipFile).Items();
-    var objTarget = objShell.NameSpace(MyTargetDir);
+    var shO = new ActiveXObject("Shell.Application");
+    var x = shO.NameSpace(Zip).Items();
+    var target = shO.NameSpace(ExtractionDir);
 
-    //These are the available CopyHere options, according to MSDN
-    //(http://msdn2.microsoft.com/en-us/library/ms723207.aspx).
-    //     4: Do not display a progress dialog box.
-    //     8: Give the file a new name in a move, copy, or rename
-    //        operation if a file with the target name already exists.
-    //    16: Click "Yes to All" in any dialog box that is displayed.
+    //You can view other opts at http://msdn2.microsoft.com/en-us/library/ms723207.aspx
 	var intOptions = 0;
-	if( PrompTo == "false ")
+	if( PrompTo == false )
 		intOptions = 16;
 
-    objTarget.CopyHere(x, intOptions);
-    objTarget = null
-    objShell  = null
-	var objFSO  = new ActiveXObject("Scripting.FileSystemObject");
-	if( objFSO.FileExists( MyTargetDir + "/php.exe" ))
-	{
-		WSH.Echo("PHP extracted to " + MyTargetDir);
-	} else {
-		WSH.Echo("Error extraction php.zip");
-	}
+    target.CopyHere(x, intOptions);
+    target = null
+    shO  = null
+	var fso  = new ActiveXObject("Scripting.FileSystemObject");
 	if( WSH.Arguments(2)=="1" ){
-		objFSO.DeleteFile( MyZipFile );
+		fso.DeleteFile( Zip );
 	};
-	objFSO = null
+	fso = null
 };
 x = null;
+}
 //JScript

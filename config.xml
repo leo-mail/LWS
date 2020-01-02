@@ -3,55 +3,20 @@
 	<CLI_Mode>0</CLI_Mode>
 	<Servers>
 		<HTTP>
-			<ip>192.168.0.10</ip>
+			<ip>127.0.0.1</ip>
 			<port>80</port>
-			<adress>leomail</adress>
-			<location>LeoMail</location>
-			<index>main.php</index>
-			<language>ua</language>
+			<adress>localhost</adress>
+			<location>localhost</location>
+			<index>index.php</index>
+			<language>en_GB</language>
 			<allow_long_logs>on</allow_long_logs>
 			<full_log>on</full_log>
 			<!--->File/response preferences</!--->
-			<dir_listening>false</dir_listening>
-			<panel>
-				<Enabled>on</Enabled>
-				<ForeignAccess>false</ForeignAccess>
-			</panel>
+			<dir_listening>true</dir_listening>
 			<locallink>.local</locallink>
-			<aliases>aliases.xml</aliases>
-			<AccessFiles>.access</AccessFiles>
+			<aliases></aliases>
 			<check_php>on</check_php>
 			<AutoRestart>false</false>
-			
-			<!--->Server application preferences</!--->
-			
-			<Protocol-Version>1.1</Protocol-Version>
-			
-		</HTTP>
-		<HTTP>
-			<ip>127.0.0.1</ip>
-			<port>128</port>
-			<location>www</location>
-			<index>index.php</index>
-			<adress>testowiy</adress>
-			<language>ua</language>
-			<allow_long_logs>on</allow_long_logs>
-			<full_log>on</full_log>
-			
-			<dir_listening>false</dir_listening>
-			<panel>
-				<Enabled>on</Enabled>
-				<ForeignAccess>false</ForeignAccess>
-			</panel>
-			<locallink>.local</locallink>
-			<aliases>aliases.xml</aliases>
-			<AccessFiles>.access</AccessFiles>
-			<check_php>on</check_php>
-			
-			<!--->Server application preferences</!--->
-			
-			<Protocol-Version>1.1</Protocol-Version>
-			
 		</HTTP>
 	</Servers>
 </XML>
