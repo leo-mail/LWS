@@ -27,7 +27,7 @@ Notice-2: under Windows it is possible to put php binaries in /php or /bin sub-f
 # Troubleshooting
 1. The port is already taken - check for other servers running on current machine, for example port 80 is default blocked by Apache on Debian
 2. Cannot start because port opening is prohibited - check & update your system's security settings, its security protocols maybe blocking some applications from opening TCP server ( socket connections )
-3. Bugs - report any bugs to out email address or to the <a href="/issues">Issues</a> section'
+3. Bugs - report any bugs to out email address or to the <a href="https://github.com/leo-mail/LWS/issues">Issues</a> section'
 
 # Configuring
 Open config.xml and edit values on your own (Further instruction will be published after upgrading to version 1.1)
