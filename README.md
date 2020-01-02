@@ -17,7 +17,7 @@ Supported OS: Windows (7 or higher), Linux (Debian, Ubuntu)<br>
 
 # Installing
 1. Download content from the git repository ( use either Zip-download option or clone it via   `git clone https://github.com/leo-mail/LWS.git` )
-2. Launch Start.sh if you're running under Linux-like system, if not - Start.bat for MS Windows<br>
+2. Rename Start file to Start.sh if you're running under Unix-like system, if not - Start.bat for MS Windows, then launch it<br>
 Then it will automatically identify php packages if it's already installed, if not - script will install it for you
 
 Notice: Superuser privelegies required when using Linux (sudo)
