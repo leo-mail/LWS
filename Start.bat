@@ -167,19 +167,25 @@ endlocal
 pause
 goto :EOF
 ::BATCH
-sudo
-if [ "" == $(dpkg-query -W --showformat='${Status}\n' php|grep "i") ]; then
-  apt-get --yes install php
-fi  
-if [ "" == $(dpkg-query -W --showformat='${Status}\n' php-cgi|grep "i") ]; then
-  apt-get --yes install php-cgi
+_cmp_=$(dpkg-query -W --showformat='${Status}\n' php|grep "i");
+if [ "" == "$_cmp_" ]; then
+    sudo apt-get --yes install php;
 fi
-if [ "" == $(dpkg-query -W --showformat='${Status}\n' wmctrl|grep "i") ]; then
-  apt-get --yes install wmctrl
+_cmp_=$(dpkg-query -W --showformat='${Status}\n' php-cgi|grep "i");
+if [ "" == "$_cmp_" ]; then
+    sudo apt-get --yes install php-cgi;
 fi
-wmctrl -r :ACTIVE: -N "Lion Web Server"
-php 'Server/Start.php'
-exit $?
+_cmp_=$(dpkg-query -W --showformat='${Status}\n' wmctrl|grep "i");
+if [ "" == "$_cmp_" ]; then
+    sudo apt-get --yes install wmctrl;
+fi
+if [ -f "temp/server;;in" ]; then
+    sudo php "Server/Start.php" $@;
+else
+    wmctrl -r :ACTIVE: -N 'Lion Web Server';
+    sudo php 'Server/Start.php';
+fi
+cd $PWD
 :<<"//JScript"
 */
 if( WSH.Arguments.Count() > 0){
