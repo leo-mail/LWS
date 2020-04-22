@@ -144,6 +144,8 @@ class LWServers
 		${0} = false;
 		if(!file_exists("temp/server;;in"))
 			{
+                if( !is_dir("temp") )
+                    mkdir("temp");
 				${0} = true;
 				file_put_contents("temp/server;;in", "");
 				file_put_contents("temp/server;;out", "");
