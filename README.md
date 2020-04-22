@@ -22,7 +22,7 @@ Supported OS: Windows 7^, Linux (Debian, Ubuntu)<br>
 1) Option 1 <br>
 Use one of the installers from the <a href="../../releases">releases</a> section<br>
 <br> Option 2 <br>
-Download content from the git repository<br> use either <a href="../../archive/master.zip"*.zip option</a> or clone it via   `git clone https://github.com/leo-mail/LWS.git`
+Download content from the git repository<br> use either <a href="../../archive/master.zip">*.zip option</a> or clone it via   `git clone https://github.com/leo-mail/LWS.git`
 2) Run Start.bat script<br>
 *Double-click on Windows, for Linux: terminal =~> sudo bash Start.bat<br>
 It will automatically identify php packages if it's already installed, if not - script will install it for you
