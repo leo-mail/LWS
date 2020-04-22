@@ -12,12 +12,10 @@ Linux or Windows system with pre-installed PHP interpreter or with latest PHP ve
 <b>Minimal PHP version: 5.5</b>
 
 # Version Info
-Version 1.0
-
 Supported protocols: HTTP/1.0, HTTP/1.1<br>
 Supported OS: Windows 7^, Linux (Debian, Ubuntu)<br>
 *The list of the supporting Operating Systems is made based on tests only.
-
+<br>Configuration is stored in config.xml (Further instructions will be written soon after release)
 # Installing
 1) Option 1 <br>
 Use one of the installers from the <a href="../../releases">releases</a> section<br>
@@ -33,9 +31,6 @@ Notice: under Windows it is possible to put php binaries in /php or /bin sub-fol
 1. The port is already taken - check for other servers running on the current machine, for example port 80 is by default blocked by Apache on Debian
 2. Cannot start because port opening is prohibited - check & update your system's security settings, its security protocols maybe blocking some applications from opening TCP server ( socket connections )
 3. Bugs - report any bugs to our email address or to the <a href="../../issues">Issues</a> section'
-
-# Configuring
-Open config.xml and edit values on your own (Further instructions will be written after release)
 
 # About
 Simple HTTP server, written using system functions (console scripts) and pure php code<br>
