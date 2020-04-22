@@ -13,7 +13,7 @@ if( !file_exists("Localization/{$config["locale"]}.ini") )
 		$config["locale"] == "en_GB";
 	if( $config["locale"] == "ru" )
 		$config["locale"] == "ru_UA";
-	file_put_contents("Localization/{$config["locale"]}.ini", file_get_contents("https://raw.githubusercontent.com/leo-mail/LWS-lang-{$config["locale"]}/master/{$config["locale"]}.ini"));
+	file_put_contents("Localization/{$config["locale"]}.ini", file_get_contents("https://raw.githubusercontent.com/leo-mail/LWS-uil/master/webint/{$config["locale"]}.ini"));
 	}
 ini_set('date.timezone', $config["Timezone"]);
 require_once 'httpserver.php';
