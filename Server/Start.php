@@ -1,5 +1,4 @@
 <?php
-include(__DIR__."/linux_vars.php");
 require_once 'FireLion/DataStructures/array.php';
 require_once 'FireLion/DataStructures/xml.php';
 
