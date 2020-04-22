@@ -1,6 +1,6 @@
 <?php
-require_once 'FireLion/DataStructures/array.php';
-require_once 'FireLion/DataStructures/xml.php';
+require_once 'FireLion/Data/Structures/array.php';
+require_once 'FireLion/Data/Structures/xml.php';
 $config = FireLion\Data\Structures\XML\ToArray(file_get_contents("config.xml"));
 ini_set('date.timezone', $config["Timezone"]);
 ini_set('php.short_open_tag', 'On');

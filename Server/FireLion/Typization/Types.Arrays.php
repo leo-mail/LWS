@@ -24,7 +24,7 @@ foreach( ["array.php", "json.php", "xml.php"] as $req=>$file )
 if( file_exists(__DIR__ . $req) )
 {
 	$$req = true;
-		require_once __DIR__ . "DataStructures/" . $file;
+		require_once __DIR__ . "Data/Structures/" . $file;
 } else $$req = false;
 class oArray implements IArray
 {
