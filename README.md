@@ -30,7 +30,7 @@ It will automatically identify php packages if it's already installed, if not - 
 Notice: under Windows it is possible to put php binaries in /php or /bin sub-folders
 
 # Troubleshooting
-1. The port is already taken - check for other servers running on current machine, for example port 80 is by default blocked by Apache on Debian
+1. The port is already taken - check for other servers running on the current machine, for example port 80 is by default blocked by Apache on Debian
 2. Cannot start because port opening is prohibited - check & update your system's security settings, its security protocols maybe blocking some applications from opening TCP server ( socket connections )
 3. Bugs - report any bugs to our email address or to the <a href="../../issues">Issues</a> section'
 
