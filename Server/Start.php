@@ -1,6 +1,6 @@
 <?php
-require_once 'FireLion/Data/Structures/array.php';
-require_once 'FireLion/Data/Structures/xml.php';
+require_once 'FL/Data/Structures/array.php';
+require_once 'FL/Data/Structures/xml.php';
 
 $config = FireLion\Data\Structures\XML\ToArray(file_get_contents("config.xml"));
 if( !is_dir("Localization") )
