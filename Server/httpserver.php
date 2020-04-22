@@ -124,7 +124,7 @@ class HTTP
      */
     function listening()
     {
-        echo "\r\n".sprintf(__wl('listening_msg'), (($this->ip=='0.0.0.0')? '127.0.0.1': $this->ip), $this->port, $this->port)."\r\n";
+        echo "\r\n".sprintf(__wl("listening_msg"), (($this->ip=='0.0.0.0')? '127.0.0.1': $this->ip), $this->port, $this->port)."\r\n";
     }    
     
     /*

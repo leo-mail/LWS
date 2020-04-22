@@ -6,7 +6,7 @@ $config = FireLion\Data\Structures\XML\ToArray(file_get_contents("config.xml"));
 ini_set('date.timezone', $config["Timezone"]);
 ini_set('php.short_open_tag', 'On');
 $Path = json_decode($argv[count($argv)-1]);
-print_r($argv);
+
 require_once 'httpserver.php';
 require_once 'ServerLoop.php';
 require_once 'lang.php';

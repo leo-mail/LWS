@@ -16,6 +16,7 @@ class LWServers
 	private $ConsoleOut;
 	private $cfg;
 	private $_updconf = true;
+	private $_terminate = false;
 	public function __construct( $Config )
 	{
 		$this->cfg = $Config;
@@ -169,18 +170,20 @@ class LWServers
 				$c = $this->GetCli();
 			}
 			$this->$c();
+			if( $this->_terminate )
+			break;
 		}
 		fclose($this->ConsoleIn);
 		fclose($this->ConsoleOut);
 		if(${0})
 			{
 				${0} = 0;
-				foreach([realpath("temp/server;;in"),realpath("temp/server;;out")] as $file)
+				foreach(["temp/server;;in","temp/server;;out"] as $file)
 				while(file_exists($file))
 				{
 					${0}++;
 					unlink($file);
-					if(${0} == 8) return;
+					if(${0} == 10) return;
 				}
 			}
 	}
@@ -203,7 +206,9 @@ class LWServers
 	public function CheckALive($id)
 	{
 		$status = proc_get_status($this->Servers[$id]);
-		if(!($status!==false&&$status["running"]==1))
+		if($status["signaled"]==true) //Why? After first signal this status can be overwritten
+            $this->_terminate = true;
+		if(!($status!==false&&$status["running"]==true)&&!$this->_terminate)
 		{
 			echo PHP_EOL."\t\t{$this->ServerInfo[$id]->type}@{$this->ServerInfo[$id]->ip}:{$this->ServerInfo[$id]->port}".PHP_EOL.
 				"ERROR: server crashed, restarting...".PHP_EOL;

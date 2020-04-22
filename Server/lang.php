@@ -11,10 +11,14 @@ function __wl($n)
 		$locale == "en_GB";
 	if( $locale == "ru" )
 		$locale == "ru_UA";
-	if( file_exists("Localization/{$locale}.ini")){
-		$l = parse_ini_file("Localization/{$locale}.ini",1);
-		$l = isset($l[$locale][$n])? $l[$locale][$n]: $n;
-		if($n[0]=='e' and $n[1]=='r' and is_int((int)$n[2])){
+	}
+	if( file_exists("Localization/{$locale}.ini") )
+	{
+		$l = parse_ini_file("Localization/{$locale}.ini",true);
+		$l = isset($l[$n])? $l[$n]: $n;
+		
+		if($n[0]=='e' and $n[1]=='r' and (int)$n[2] > -1)
+		{
 			return "<center><h1>".substr($n, 2)."</h1><p>$l</p><hr><sub>Lion Web Server</sub></center>";
 		}
 		return $l;

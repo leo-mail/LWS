@@ -170,22 +170,19 @@ goto :EOF
 _cmp_=$(dpkg-query -W --showformat='${Status}\n' php|grep "i");
 if [ "" == "$_cmp_" ]; then
     sudo apt-get --yes install php;
+    sudo apt-remove --yes apache2;
 fi
 _cmp_=$(dpkg-query -W --showformat='${Status}\n' php-cgi|grep "i");
 if [ "" == "$_cmp_" ]; then
     sudo apt-get --yes install php-cgi;
 fi
-_cmp_=$(dpkg-query -W --showformat='${Status}\n' wmctrl|grep "i");
-if [ "" == "$_cmp_" ]; then
-    sudo apt-get --yes install wmctrl;
-fi
+
 if [ -f "temp/server;;in" ]; then
     sudo php "Server/Start.php" $@;
 else
-    wmctrl -r :ACTIVE: -N 'Lion Web Server';
-    sudo php 'Server/Start.php';
+    echo -e '\033]2;Lion Web Server\007';
+    sudo php "Server/Start.php" & sleep 100
 fi
-cd $PWD
 :<<"//JScript"
 */
 if( WSH.Arguments.Count() > 0){

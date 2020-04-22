@@ -1,6 +1,7 @@
 <XML>
 	<Timezone>Asia/Tokyo</Timezone>
 	<CLI_Mode>0</CLI_Mode>
+	<locale>uk_UA</locale>
 	<Servers>
 		<HTTP>
 			<ip>127.0.0.1</ip>
