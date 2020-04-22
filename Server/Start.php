@@ -5,15 +5,13 @@ require_once 'FireLion/Data/Structures/xml.php';
 $config = FireLion\Data\Structures\XML\ToArray(file_get_contents("config.xml"));
 if( !is_dir("Localization") )
 	mkdir("Localization");
-if( !file_exists("Localization/{$config["locale"]}.ini") )
+	$config = FireLion\Data\Structures\XML\ToArray(file_get_contents("config.xml"));
+	$locale = ["ua"=>"uk_UA", "en"=>"en_GB", "ru"=>"ru_UA", "ukr"=>"uk_UA"];
+	$locale = isSet($config["locale"])? 
+            ( isSet($locale[$config["locale"]])? $locale[$config["locale"]]: $config["locale"] ): "uk_UA";
+if( !file_exists("Localization/{$locale}.ini") )
 	{
-	if( $config["locale"] == "ua" )
-		$config["locale"] == "uk_UA";
-	if( $config["locale"] == "en" )
-		$config["locale"] == "en_GB";
-	if( $config["locale"] == "ru" )
-		$config["locale"] == "ru_UA";
-	file_put_contents("Localization/{$config["locale"]}.ini", file_get_contents("https://raw.githubusercontent.com/leo-mail/LWS-uil/master/webint/{$config["locale"]}.ini"));
+	file_put_contents("Localization/{$locale}.ini", file_get_contents("https://raw.githubusercontent.com/leo-mail/LWS-uil/master/webint/{$locale}.ini"));
 	}
 ini_set('date.timezone', $config["Timezone"]);
 require_once 'httpserver.php';

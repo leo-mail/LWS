@@ -2,15 +2,11 @@
 function __wl($n)
 {
 	$config = FireLion\Data\Structures\XML\ToArray(file_get_contents("config.xml"));
-	$locale = isset($locale)? $config["locale"]: "uk_UA";
+	$locale = ["ua"=>"uk_UA", "en"=>"en_GB", "ru"=>"ru_UA", "ukr"=>"uk_UA"];
+	$locale = isSet($config["locale"])? 
+            ( isSet($locale[$config["locale"]])? $locale[$config["locale"]]: $config["locale"] ): "uk_UA";
 	if( !file_exists("Localization/{$locale}.ini") )
 	{
-	if( $locale == "ua" )
-		$locale == "uk_UA";
-	if( $locale == "en" )
-		$locale == "en_GB";
-	if( $locale == "ru" )
-		$locale == "ru_UA";
 	}
 	if( file_exists("Localization/{$locale}.ini") )
 	{
